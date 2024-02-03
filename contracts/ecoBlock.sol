@@ -9,11 +9,9 @@ import "hardhat/console.sol";
 
 contract ecoBlock is ERC721URIStorage{
     using Counters for Counters.Counter;
-    //For creating tokenIds and incrementing
-    Counters.Counter private _tokenIds;
+     //State variables
+    Counters.Counter private _tokenIds;//For creating tokenIds and incrementing
     Counters.Counter private _itemsSold;
-
-    //State variables
     uint256 listPrice=0.001 ether;
     address payable owner;
     mapping(uint256 => MarketItem) private idMarketItem;
@@ -95,7 +93,7 @@ contract ecoBlock is ERC721URIStorage{
         
     }
 
-    //ReSale function
+    //ReSale function(for a user who want to resale a bought NFT)
     function reSellToken(uint256 tokenId,uint256 price) public payable{
         require(idMarketItem[tokenId].owner==msg.sender,"Ownership Invalid");
         require(msg.value>=listPrice,"Price must be greater than Listing Price");
@@ -149,7 +147,50 @@ contract ecoBlock is ERC721URIStorage{
 
     //Displaying Bought NFTs of User
     function fetchMyNFT() public view returns(MarketItem[] memory){
+        uint256 totalCount=_tokenIds.current();
+        uint256 itemCount=0;
+        uint256 currentIndex=0;
 
+        for(uint256 i=0;i<itemCount;i++){
+            if(idMarketItem[i+1].owner==msg.sender){
+                itemCount+=1;
+            }
+        }
+        MarketItem[] memory items=new MarketItem[](itemCount);
+        for(uint256 i=0;i<itemCount;i++){
+            if(idMarketItem[i+1].owner==msg.sender){
+                uint256 currentId=i+1;
+                MarketItem storage currentItem =idMarketItem[currentId];//Struct to Struct info transfer
+                items[currentIndex]=currentItem;
+                currentIndex+=1;
+               
+            }
+         }
+        return items;
+    }
+
+    //Displaying  NFTs listed by an individual
+    function fetchItemsListed() public view return(MarketItem[] memory){
+        uint256 totalCount=_tokenIds.current();
+        uint256 itemCount=0;
+        uint256 currentIndex=0;
+
+        for(uint256 i=0;i<itemCount;i++){
+            if(idMarketItem[i+1].seller==msg.sender){
+                itemCount+=1;
+            }
+        }
+        MarketItem[] memory items=new MarketItem[](itemCount);
+        for(uint256 i=0;i<itemCount;i++){
+            if(idMarketItem[i+1].seller==msg.sender){
+                uint256 currentId=i+1;
+                MarketItem storage currentItem =idMarketItem[currentId];//Struct to Struct info transfer
+                items[currentIndex]=currentItem;
+                currentIndex+=1;
+               
+            }
+         }
+        return items;
     }
 
 }
