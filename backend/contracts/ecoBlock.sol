@@ -2,16 +2,16 @@
 pragma solidity ^0.8.4;
 
 //Imports
-import "@openzeppelin/contracts/utils/Counters.sol";
+
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
 contract ecoBlock is ERC721URIStorage{
-    using Counters for Counters.Counter;
+    
      //State variables
-    Counters.Counter private _tokenIds;//For creating tokenIds and incrementing
-    Counters.Counter private _itemsSold;
+    uint private  _tokenIds;
+    uint private _itemsSold;
     uint256 listPrice=0.001 ether;
     address payable owner;
     mapping(uint256 => MarketItem) private idMarketItem;
@@ -25,7 +25,7 @@ contract ecoBlock is ERC721URIStorage{
 
     //Events
     event idMarketItemCreated(
-        uint256 indexed tokenId;
+        uint256 indexed tokenId,
         address seller,
         address owner,
         uint256 price,
@@ -55,9 +55,9 @@ contract ecoBlock is ERC721URIStorage{
     }
 
     //Used by a Client to list an NFT
-    function createToken(string memory tokenURI,uint256 price) public payable return(uint256){
-        _tokenIds.increment();
-        uint256 newTokenId=_tokenIds.current();
+    function createToken(string memory tokenURI,uint256 price) public payable returns(uint256){
+        _tokenIds+=1;
+        uint256 newTokenId=_tokenIds;
 
         _mint(msg.sender,newTokenId);
         _setTokenURI(newTokenId,tokenURI);
@@ -68,7 +68,7 @@ contract ecoBlock is ERC721URIStorage{
     }
 
     //Used to create a space in MarketPlace for the NFT
-    function createMarketItem(uint256 tokenURI,uint256 price) private{
+    function createMarketItem(uint256 tokenId,uint256 price) private{
         require(price>=0,"Minimum Price is 0.5");
         require(msg.value>=listPrice,"Price must be greater than Listing Price");
 
@@ -103,7 +103,7 @@ contract ecoBlock is ERC721URIStorage{
         idMarketItem[tokenId].seller=payable(msg.sender);
         idMarketItem[tokenId].owner=payable(address(this));
 
-        _itemsSold.decrement();//Resale Not Sale so decrement
+        _itemsSold-=1;//Resale Not Sale so decrement
 
          _transfer(msg.sender,address(this),tokenId);
 
@@ -118,7 +118,7 @@ contract ecoBlock is ERC721URIStorage{
         idMarketItem[tokenId].sold=true;
         idMarketItem[tokenId].owner=payable(address(0));//Delinking NFT ownership from contract
        
-       _itemsSold.increment();
+       _itemsSold+=1;
 
        _transfer(address(this),msg.sender,tokenId);
 
@@ -127,9 +127,9 @@ contract ecoBlock is ERC721URIStorage{
     }
 
     //Fetching NFTs available in MarketPlace
-    function fetchMarketItem() public view returns(MarketItem[] memeory){
-        uint256 itemCount=_tokenIds.current();
-        uint256 unsoldItemCount=_tokenIds.current() - _itemsSold.current();
+    function fetchMarketItem() public view returns(MarketItem[] memory){
+        uint256 itemCount=_tokenIds;
+        uint256 unsoldItemCount=_tokenIds - _itemsSold;
         uint256 currentIndex=0;
 
         MarketItem[] memory items=new MarketItem[](unsoldItemCount);
@@ -147,17 +147,17 @@ contract ecoBlock is ERC721URIStorage{
 
     //Displaying Bought NFTs of User
     function fetchMyNFT() public view returns(MarketItem[] memory){
-        uint256 totalCount=_tokenIds.current();
+        uint256 totalCount=_tokenIds;
         uint256 itemCount=0;
         uint256 currentIndex=0;
 
-        for(uint256 i=0;i<itemCount;i++){
+        for(uint256 i=0;i<totalCount;i++){
             if(idMarketItem[i+1].owner==msg.sender){
                 itemCount+=1;
             }
         }
         MarketItem[] memory items=new MarketItem[](itemCount);
-        for(uint256 i=0;i<itemCount;i++){
+        for(uint256 i=0;i<totalCount;i++){
             if(idMarketItem[i+1].owner==msg.sender){
                 uint256 currentId=i+1;
                 MarketItem storage currentItem =idMarketItem[currentId];//Struct to Struct info transfer
@@ -170,18 +170,18 @@ contract ecoBlock is ERC721URIStorage{
     }
 
     //Displaying  NFTs listed by an individual
-    function fetchItemsListed() public view return(MarketItem[] memory){
-        uint256 totalCount=_tokenIds.current();
+    function fetchItemsListed() public view returns(MarketItem[] memory){
+        uint256 totalCount=_tokenIds;
         uint256 itemCount=0;
         uint256 currentIndex=0;
 
-        for(uint256 i=0;i<itemCount;i++){
+        for(uint256 i=0;i<totalCount;i++){
             if(idMarketItem[i+1].seller==msg.sender){
                 itemCount+=1;
             }
         }
         MarketItem[] memory items=new MarketItem[](itemCount);
-        for(uint256 i=0;i<itemCount;i++){
+        for(uint256 i=0;i<totalCount;i++){
             if(idMarketItem[i+1].seller==msg.sender){
                 uint256 currentId=i+1;
                 MarketItem storage currentItem =idMarketItem[currentId];//Struct to Struct info transfer
