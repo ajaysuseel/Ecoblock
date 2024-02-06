@@ -1,7 +1,11 @@
+import { NFTList } from '@/data/NFT';
+import Link from 'next/link';
 import React from 'react'
 import { AiFillLike } from "react-icons/ai";
-const CardComponent = () => {
+
+const CardComponent = (id) => {
     return (
+        <Link href={`/collection/${id}`}>
 
         <div className="w-64 lg:w-72 h-fit p-2 m-auto flex flex-col text-black">
         
@@ -33,8 +37,9 @@ const CardComponent = () => {
             </div>
 
         </div>
+        </Link> 
 
     )
 }
 
-export default CardComponent
+export default CardComponent;

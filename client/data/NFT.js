@@ -5,6 +5,7 @@ export const NFTList=[
         img:'',
         position:'Chairperson',
         linkedIn:'linkedin.com',
+        
     },
     {
         id:1,

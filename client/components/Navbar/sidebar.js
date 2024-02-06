@@ -4,8 +4,8 @@ import Helpcenter from './Helpcenter'
 
 const Sidebar = () => {
     return (
-        <div className='h-full w-60 text-left fixed '>
-            <ul className="flex text-black flex-col justify-center content-center py-2 text-sm  " aria-labelledby="dropdownDefaultButton">
+        <div className='h-full w-60 text-left fixed bg-black'>
+            <ul className="flex text-white flex-col justify-center content-center py-2 text-sm  " aria-labelledby="dropdownDefaultButton">
                 <li>
                     <Discover />
                     

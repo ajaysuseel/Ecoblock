@@ -13,7 +13,7 @@ const FeatureNft = () => {
                 <div className="relative h-56  overflow-hidden rounded-lg md:h-96">
                     {
                         NFTList.map(item => (
-                            <CardComponent />
+                            <CardComponent id={item.id} />
                         ))
                     }
                 </div>
