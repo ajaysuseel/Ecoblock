@@ -1,13 +1,7 @@
-# Sample Hardhat Project
+#NFT MarketPlace
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This is a Web3 Project aimed at providing a Marketplace for NFTs that promote and inspire Eco-friendliness and Sustainability!
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+##Dev Steps##
+1.Setting Up and Installing dependencies
+2.Creating the Smart Contract
