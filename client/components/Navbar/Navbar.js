@@ -14,8 +14,8 @@ const Navbar = () => {
   const [sidebar, setsidebar] = useState(false);
   return (
     <div>
-    <div className='flex justify-between p-5 pl-10 pr-10 '>
-      <Image src="/logo.png"  height={20} width={30} />
+    <div className='flex  justify-between p-5 pl-10 pr-10 '>
+      <Image src="/logo.png"  height={20} width={30} className="h-fit" />
       <form className='hidden lg:block'>   
     <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div className="relative">
